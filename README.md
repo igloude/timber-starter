@@ -1,5 +1,10 @@
 # Timber Starter Theme
 
+## Development
+
+- Start WP host server
+- Run `gulp dev` in the command line from theme root
+
 ## Installation
 
 - Install ACF plugin and enter Pro license key

@@ -20,3 +20,4 @@ docs/output
 wordpress
 composer.lock
 .vscode
+dist/
