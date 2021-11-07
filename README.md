@@ -11,11 +11,6 @@
 - Run `composer install`
   - Issues? Try moving to PHP `7.x`.
 
-TODO:
-
-- [ ] Setup npm packages
-- [ ] Write gulp scripts to handle Sass
-
 ### First Time Setup
 
 - Install composer globally with [homebrew](https://brew.sh/) `brew install composer`
