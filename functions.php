@@ -1,5 +1,9 @@
 <?php
 
+require_once( __DIR__ . '/vendor/autoload.php' );
+
+$timber = new Timber\Timber();
+
 if ( ! class_exists( 'Timber' ) ) {
 	add_action( 'admin_notices', function() {
 		echo '<div class="error"><p>Timber not activated. Make sure you activate the plugin in <a href="' . esc_url( admin_url( 'plugins.php#timber' ) ) . '">' . esc_url( admin_url( 'plugins.php') ) . '</a></p></div>';
@@ -15,26 +19,27 @@ if ( ! class_exists( 'Timber' ) ) {
 Timber::$dirname = array('templates', 'views');
 
 
-
 class ModularSite extends TimberSite {
 
 	function __construct() {
 		show_admin_bar( false );
-		add_theme_support( 'post-formats');
-		add_theme_support( 'post-thumbnails' );
+		// add_theme_support( 'post-formats');
+		// add_theme_support( 'post-thumbnails' );
 		add_theme_support( 'menus' );
 		add_theme_support( 'html5', array( 'comment-list', 'comment-form', 'search-form', 'gallery', 'caption' ) );
+		add_action( 'init', array( $this, 'register_post_types' ) );
+		add_action( 'init', array( $this, 'register_taxonomies' ) );
 		add_filter('timber_context', array($this, 'add_to_context'));
-		add_filter('get_twig', array($this, 'add_to_twig')); //hook into twig global object
+		// add_filter('get_twig', array($this, 'add_to_twig')); // hook into twig global object
 		parent::__construct();
 	}
 
 	function add_to_context( $context ) {
-		// $context['header_nav_menu'] = new TimberMenu('header_nav');
-		// $context['footer_nav_menu'] = new TimberMenu('footer_nav');
+		$context['header_nav_menu'] = new TimberMenu('header_nav');
+		$context['footer_nav_menu'] = new TimberMenu('footer_nav');
 		$context['site'] = $this;
-		// $context['options'] = get_fields('options');
-		
+		$context['options'] = get_fields('options');
+
 
 		$all_posts_args = array(
 			'post_type' => 'post',
@@ -46,15 +51,20 @@ class ModularSite extends TimberSite {
 		$context['all_posts'] = Timber::get_posts( $all_posts_args );
 
 		
-		// $post_taxonomies_args = array(
-		//     'taxonomy' => 'category',
-		//     'hide_empty' => false,
-		// );
-		// $context['post_taxonomies'] = get_terms( $post_taxonomies_args );
+		$post_taxonomies_args = array(
+		    'taxonomy' => 'category',
+		    'hide_empty' => false,
+		);
+		$context['post_taxonomies'] = get_terms( $post_taxonomies_args );
 
 		
 		return $context;
 	}
+
+	// function add_to_twig( $twig ) {
+	// 	$twig->addFilter(new Twig_SimpleFilter('some_function', array($this, 'some_function')));
+	// 	return $twig;
+	// }
 
 }
 
@@ -78,33 +88,3 @@ add_action('wp_enqueue_scripts', 'app_scripts');
 // }
 
 // add_action('init', 'app_get_lib');
-
-
-
-// if( function_exists('acf_add_options_page') ) {
-
-	// acf_add_options_page(array(
-	// 	'page_title' 	=> 'Theme General Settings',
-	// 	'menu_title'	=> 'Theme Settings',
-	// 	'menu_slug' 	=> 'theme-general-settings',
-	// 	'capability'	=> 'edit_posts',
-	// 	'redirect'		=>  false
-	// ));
-
-	// acf_add_options_page(array(
-	// 	'page_title' 	=> 'Custom Module Data',
-	// 	'menu_title'	=> 'Custom Modules',
-	// 	'menu_slug' 	=> 'custom-modules',
-	// 	'capability'	=> 'edit_posts',
-	// 	'redirect'		=>  false
-	// ));
-
-	// acf_add_options_page(array(
-	// 	'page_title' 	=> 'Style Guide Custom Fields',
-	// 	'menu_title'	=> 'Style Guide Data',
-	// 	'menu_slug' 	=> 'style-guide-fields',
-	// 	'capability'	=> 'edit_posts',
-	// 	'redirect'		=>  false
-	// ));
-
-// }
