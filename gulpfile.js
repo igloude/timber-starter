@@ -1,66 +1,48 @@
 "use strict";
 
-const { watch, src, dest, series, parallel } = require("gulp");
-const del = require("del");
+const { watch, src, dest, series } = require("gulp");
+// const del = require("del");
 const maps = require("gulp-sourcemaps");
-const gulpSass = require("gulp-sass")(require("sass"));
-const concat = require("gulp-concat");
-const uglify = require("gulp-uglify");
+const sass = require("gulp-sass")(require("sass"));
+const browserSync = require("browser-sync").create();
 
 // clean
-function clean() {
-	return del("dist");
-}
+// function clean() {
+// 	return del("dist");
+// }
 
 // sass
-function sass() {
+function style() {
 	return src("./assets/styles/application.scss")
 		.pipe(maps.init())
-		.pipe(gulpSass().on("error", gulpSass.logError))
+		.pipe(sass().on("error", sass.logError))
 		.pipe(maps.write())
-		.pipe(dest("./dist"));
+		.pipe(dest("./dist"))
+		.pipe(browserSync.stream());
 }
 
-function sassProduction() {
+function styleProduction() {
 	return src("./assets/styles/application.scss")
-		.pipe(
-			gulpSass({ outputStyle: "compressed" }).on("error", gulpSass.logError)
-		)
+		.pipe(sass({ outputStyle: "compressed" }).on("error", sass.logError))
 		.pipe(dest("./dist"));
-}
-
-// js
-var appScripts = [
-	"./assets/scripts/vendor/*.js",
-	"./assets/scripts/modules/*.js",
-];
-function scripts() {
-	return src(appScripts)
-		.pipe(maps.init())
-		.pipe(concat("application.js"))
-		.pipe(maps.write())
-		.pipe(dest("./dist/"));
-}
-function scriptsProduction() {
-	return src(appScripts)
-		.pipe(concat("application.js"))
-		.pipe(uglify())
-		.pipe(dest("./dist/"));
 }
 
 // watchers
-function sassWatch() {
-	watch("./assets/styles/**/*.scss", ["sass"]);
-}
-
-function scriptsWatch() {
-	watch("./assets/scripts/**/*.js", ["scripts"]);
+function watcher() {
+	browserSync.init({
+		proxy: "localhost:1234",
+		open: "local",
+		port: 1234,
+		liveReload: true,
+	});
+	watch(["./assets/styles/**/*.scss"], series("style"));
+	watch(["./assets/scripts/**/*.js", "./**/*.php", "./**/*.twig"]).on(
+		"change",
+		browserSync.reload
+	);
 }
 
 // aggregate tasks
-exports.dev = series(
-	clean,
-	parallel(sass, scripts),
-	parallel(sassWatch, scriptsWatch)
-);
-exports.prod = series(clean, parallel(sassProduction, scriptsProduction));
+exports.style = style;
+exports.styleProp = styleProduction;
+exports.watch = watcher;

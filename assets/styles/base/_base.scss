@@ -1,3 +1,5 @@
+@use "sass:math";
+
 /**
  *
  * Base
@@ -25,9 +27,7 @@ html {
 	// background: $color-background;
 	-ms-text-size-adjust: 100%;
 	-webkit-text-size-adjust: 100%;
-
-	// predictable "rem" units when desired
-	font-size: 10px;
+	font-size: 16px;
 
 	// prevents the window from being entirely squished and unusable
 	min-width: 320px;
@@ -47,7 +47,7 @@ select {
 
 	@include query("small") {
 		// font-size: $font-size-body;
-		line-height: (36/22);
+		line-height: math.div(36, 22);
 	}
 }
 
