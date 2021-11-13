@@ -21,3 +21,4 @@ wordpress
 composer.lock
 .vscode
 dist/
+.env

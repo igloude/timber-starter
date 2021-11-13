@@ -1,18 +1,16 @@
 # Timber Starter Theme
 
-## First Time Setup
-
-- Install composer globally with [homebrew](https://brew.sh/) `brew install composer`
-- Check `node -v` is >= v8.11.1, `npm -v` is >= v5.6.0, and `npx -v` is >= v9.7.1
-- Install gulp CLI `npm install --global gulp-cli`
-
 ## Installation
 
-- Install ACF plugin and enter Pro license key
-- Run `composer install`
-  - Issues? Try moving to PHP `7.x`.
+Optional: set up a local WP server. My preferred method is [this Docker image](https://gist.github.com/igloude/0fd62d4fc83c8d12c1bd289e27aea831)
+
+- Install gulp CLI `npm install --global gulp-cli`
+- Install and activate Timber plugin
+- Install and activate ACF plugin and enter Pro license key
+- Copy `.env.txt` file to a `.env` file
+  - Update the `PORT` variable to match the port your localhost is serving to
 
 ## Development
 
-- Start WP host server (Note: gulp task assumes a port of `1234`)
+- Start WP host server
 - Run `gulp watch` in the command line from theme root

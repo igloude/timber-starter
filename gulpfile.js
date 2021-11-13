@@ -1,5 +1,7 @@
 "use strict";
 
+require("dotenv").config();
+
 const { watch, src, dest, series } = require("gulp");
 // const del = require("del");
 const maps = require("gulp-sourcemaps");
@@ -30,9 +32,9 @@ function styleProduction() {
 // watchers
 function watcher() {
 	browserSync.init({
-		proxy: "localhost:1234",
+		proxy: `localhost:${process.env.PORT}`,
 		open: "local",
-		port: 1234,
+		port: process.env.PORT,
 		liveReload: true,
 	});
 	watch(["./assets/styles/**/*.scss"], series("style"));
